@@ -1,4 +1,4 @@
-package com.spring.daystudy.test;
+package com.spring.daystudy.service;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -13,6 +13,9 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.spring.daystudy.dto.GoogleApiDto;
+import com.spring.daystudy.test.GoogleApiTest;
+import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,38 +24,29 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+
 /**
- * packageName    : com.spring.daystudy.test
- * fileName       : GoogleApiTest
+ * packageName    : com.spring.daystudy.service
+ * fileName       : GoogleApiServiceImpl
  * author         : Sora
- * date           : 2024-07-20
- * description    : 구글 api 연동 테스트
+ * date           : 2024-07-21
+ * description    : Read my excel sheet
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
- * 2024-07-20        Sora       최초 생성
+ * 2024-07-21        Sora       최초 생성
  */
-public class GoogleApiTest {
+@Service
+public class GoogleApiServiceImpl {
 
-    private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
+    private static final String APPLICATION_NAME = "Google Sheets API with DayStudy";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
-    /**
-     * Global instance of the scopes required by this quickstart.
-     * If modifying these scopes, delete your previously saved tokens/ folder.
-     */
     private static final List<String> SCOPES =
             Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
-    /**
-     * Creates an authorized Credential object.
-     *
-     * @param HTTP_TRANSPORT The network HTTP Transport.
-     * @return An authorized Credential object.
-     * @throws IOException If the credentials.json file cannot be found.
-     */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
         // Load client secrets.
@@ -73,15 +67,10 @@ public class GoogleApiTest {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    /**
-     * Prints the names and majors of students in a sample spreadsheet:
-     * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-     */
-    public static void main(String... args) throws IOException, GeneralSecurityException {
-        // Build a new authorized API client service.
+    public void getGoogleSheet() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String spreadsheetId = "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms";
-        final String range = "Class Data!A2:E";
+        final String spreadsheetId = "1ZbM6f-c4NcuzfrDYsFowRG5_lxBpzAhBgmI3EwOBfZs";
+        final String range = "day1!A2:D"; // sheet naem !:가져올 row:가져올 row
         Sheets service =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)
@@ -102,4 +91,5 @@ public class GoogleApiTest {
             }
         }
     }
+
 }
